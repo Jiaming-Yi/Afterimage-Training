@@ -93,36 +93,23 @@
         }
 
         .training-card {
-            width: 200px;
-            height: 200px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0;
+            margin: 0;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .training-card:hover {
             transform: scale(1.05);
-        }
-
-        /* 训练时填满整个训练区域 */
-        .training-card.training-active {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            border-radius: 15px !important;
-            margin: 0 !important;
-            z-index: 10 !important;
-        }
-        
-        .training-card.training-active.yellow-card::after {
-            width: 8vmin !important;
-            height: 8vmin !important;
         }
 
         /* 黄卡样式 */
@@ -133,8 +120,8 @@
 
         .yellow-card::after {
             content: '';
-            width: 40px;
-            height: 40px;
+            width: 8vmin;
+            height: 8vmin;
             background: #0606f2;
             border-radius: 50%;
             position: absolute;
@@ -831,9 +818,6 @@
             }
 
             startTraining() {
-                // 让训练卡片填满训练区域
-                this.trainingCard.classList.add('training-active');
-                
                 if (!this.isTraining) {
                     // 第一次开始训练
                     this.isTraining = true;
@@ -957,9 +941,6 @@
             }
 
             stopTraining() {
-                // 移除训练时的扩展样式
-                this.trainingCard.classList.remove('training-active');
-
                 // 停止训练并保存训练记录
                 if (this.isTraining && this.sessionStartTime) {
                     this.saveTrainingSession();
@@ -972,9 +953,6 @@
             resetTraining() {
                 this.isTraining = false;
                 this.autoTraining = false;
-                
-                // 移除训练时的扩展样式
-                this.trainingCard.classList.remove('training-active');
                 
                 if (this.timer) {
                     clearInterval(this.timer);
