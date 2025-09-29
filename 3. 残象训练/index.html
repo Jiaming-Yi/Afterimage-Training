@@ -107,18 +107,21 @@
             transform: scale(1.05);
         }
 
-        .training-card:fullscreen {
-            width: 100vw;
-            height: 100vh;
-            border-radius: 0;
-            box-shadow: none;
+        /* 训练时填满整个训练区域 */
+        .training-card.training-active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
             margin: 0;
-            border: none;
+            z-index: 10;
         }
         
-        .training-card.yellow-card:fullscreen::after {
-            width: 10vmin;
-            height: 10vmin;
+        .training-card.training-active.yellow-card::after {
+            width: 8vmin;
+            height: 8vmin;
         }
 
         /* 黄卡样式 */
@@ -773,14 +776,6 @@
                         this.hideTrainingLog();
                     }
                 });
-
-                // 监听全屏变化事件
-                document.addEventListener('fullscreenchange', () => {
-                    // 如果退出了全屏并且训练正在进行，则停止训练
-                    if (!document.fullscreenElement && this.isTraining) {
-                        this.stopTraining();
-                    }
-                });
             }
 
             setupMode() {
@@ -835,11 +830,8 @@
             }
 
             startTraining() {
-                // 进入全屏模式
-                this.trainingCard.requestFullscreen().catch(err => {
-                    // 如果无法进入全屏，也允许非全屏模式下训练
-                    console.warn(`无法进入全屏模式: ${err.message}`);
-                });
+                // 让训练卡片填满训练区域
+                this.trainingCard.classList.add('training-active');
                 
                 if (!this.isTraining) {
                     // 第一次开始训练
@@ -964,10 +956,8 @@
             }
 
             stopTraining() {
-                // 如果在全屏模式下，则退出全屏
-                if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                }
+                // 移除训练时的扩展样式
+                this.trainingCard.classList.remove('training-active');
 
                 // 停止训练并保存训练记录
                 if (this.isTraining && this.sessionStartTime) {
@@ -981,6 +971,9 @@
             resetTraining() {
                 this.isTraining = false;
                 this.autoTraining = false;
+                
+                // 移除训练时的扩展样式
+                this.trainingCard.classList.remove('training-active');
                 
                 if (this.timer) {
                     clearInterval(this.timer);
