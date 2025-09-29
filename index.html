@@ -107,6 +107,23 @@
             transform: scale(1.05);
         }
 
+        /* 训练时填满整个训练区域 */
+        .training-card.training-active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            margin: 0;
+            z-index: 10;
+        }
+        
+        .training-card.training-active.yellow-card::after {
+            width: 8vmin;
+            height: 8vmin;
+        }
+
         /* 黄卡样式 */
         .yellow-card {
             background: #ffff00;
@@ -813,6 +830,9 @@
             }
 
             startTraining() {
+                // 让训练卡片填满训练区域
+                this.trainingCard.classList.add('training-active');
+                
                 if (!this.isTraining) {
                     // 第一次开始训练
                     this.isTraining = true;
@@ -936,6 +956,9 @@
             }
 
             stopTraining() {
+                // 移除训练时的扩展样式
+                this.trainingCard.classList.remove('training-active');
+
                 // 停止训练并保存训练记录
                 if (this.isTraining && this.sessionStartTime) {
                     this.saveTrainingSession();
@@ -948,6 +971,9 @@
             resetTraining() {
                 this.isTraining = false;
                 this.autoTraining = false;
+                
+                // 移除训练时的扩展样式
+                this.trainingCard.classList.remove('training-active');
                 
                 if (this.timer) {
                     clearInterval(this.timer);
